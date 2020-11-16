@@ -7,6 +7,7 @@ import { sendWelcomeEmail, sendCancelationEmail } from "../emails/account.js";
 
 export const userRouter = new express.Router();
 
+//ADD user
 userRouter.post("/users", async (req, res) => {
   const user = new User(req.body);
 
@@ -20,6 +21,7 @@ userRouter.post("/users", async (req, res) => {
   }
 });
 
+//LOGIN
 userRouter.post("/users/login", async (req, res) => {
   try {
     const user = await User.findByCredentials(
@@ -33,6 +35,7 @@ userRouter.post("/users/login", async (req, res) => {
   }
 });
 
+//LOGOUT
 userRouter.post("/users/logout", auth, async (req, res) => {
   try {
     req.user.tokens = req.user.tokens.filter(
@@ -45,6 +48,7 @@ userRouter.post("/users/logout", auth, async (req, res) => {
   }
 });
 
+//LOGOUT ALL
 userRouter.post("/users/logoutAll", auth, async (req, res) => {
   try {
     req.user.tokens = [];
@@ -55,10 +59,12 @@ userRouter.post("/users/logoutAll", auth, async (req, res) => {
   }
 });
 
+//READ profile
 userRouter.get("/users/me", auth, async (req, res) => {
   res.send(req.user);
 });
 
+//READ profile by ID
 userRouter.get("/users/:id", async (req, res) => {
   const _id = req.params.id;
 
@@ -75,6 +81,7 @@ userRouter.get("/users/:id", async (req, res) => {
   }
 });
 
+//UPDATE profile
 userRouter.patch("/users/me", auth, async (req, res) => {
   const updates = Object.keys(req.body);
   const allowedUpdates = ["name", "email", "password", "age"];
@@ -95,6 +102,7 @@ userRouter.patch("/users/me", auth, async (req, res) => {
   }
 });
 
+//DELETE profile
 userRouter.delete("/users/me", auth, async (req, res) => {
   try {
     await req.user.remove();
@@ -105,6 +113,7 @@ userRouter.delete("/users/me", auth, async (req, res) => {
   }
 });
 
+//UPLOAD & OVERWRITE profile avatar
 const upload = multer({
   limits: {
     fileSize: 1000000,
@@ -146,12 +155,14 @@ userRouter.post(
   }
 );
 
+//DELETE profile avatar
 userRouter.delete("/users/me/avatar", auth, async (req, res) => {
   req.user.avatar = undefined;
   await req.user.save();
   res.send();
 });
 
+//READ profile avatar
 userRouter.get("/users/:id/avatar", async (req, res) => {
   try {
     const user = await User.findById(req.params.id);

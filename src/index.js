@@ -1,5 +1,4 @@
 import express from "express";
-import { connection } from "../src/db/mongoose.js";
 import { userRouter } from "./routers/user.js";
 import { taskRouter } from "./routers/task.js";
 

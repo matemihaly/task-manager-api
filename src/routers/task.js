@@ -4,6 +4,7 @@ import { auth } from "../middleware/auth.js";
 
 export const taskRouter = new express.Router();
 
+// ADD new task
 taskRouter.post("/tasks", auth, async (req, res) => {
   const task = new Task({
     ...req.body,
@@ -18,10 +19,7 @@ taskRouter.post("/tasks", auth, async (req, res) => {
   }
 });
 
-// GET /tasks?isCompleted=true
-// GET /tasks?limit=10&skip=20
-// GET /tasks?sortBy=createdAt_desc
-
+//READ tasks
 taskRouter.get("/tasks", auth, async (req, res) => {
   const match = {};
   const sort = {};
@@ -54,6 +52,7 @@ taskRouter.get("/tasks", auth, async (req, res) => {
   }
 });
 
+//READ task by ID
 taskRouter.get("/tasks/:id", auth, async (req, res) => {
   const _id = req.params.id;
 
@@ -70,6 +69,7 @@ taskRouter.get("/tasks/:id", auth, async (req, res) => {
   }
 });
 
+//UPDATE task by ID
 taskRouter.patch("/tasks/:id", auth, async (req, res) => {
   const updates = Object.keys(req.body);
   const allowedUpdates = ["description", "isCompleted"];
@@ -99,6 +99,7 @@ taskRouter.patch("/tasks/:id", auth, async (req, res) => {
   }
 });
 
+//DELETE task by ID
 taskRouter.delete("/tasks/:id", auth, async (req, res) => {
   try {
     const task = await Task.findOneAndDelete({
